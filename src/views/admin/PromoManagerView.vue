@@ -3,27 +3,27 @@
         <div class="page-header">
             <div class="header-content">
                 <h2>Promotion Hub</h2>
-                <p class="subtitle">Create and track discount campaigns.</p>
+                <p class="subtitle">Create, edit, and track discount campaigns.</p>
             </div>
         </div>
 
         <div class="promo-grid">
 
-            <div class="panel create-panel">
+            <div class="panel create-panel" :class="{ 'editing-mode': isEditing }">
                 <div class="panel-header">
                     <div class="icon-badge">
-                        <PhMagicWand weight="fill" />
+                        <component :is="isEditing ? PhPencilSimple : PhMagicWand" weight="fill" />
                     </div>
-                    <h3>Generate Code</h3>
+                    <h3>{{ isEditing ? 'Edit Coupon' : 'Generate Code' }}</h3>
                 </div>
 
-                <form @submit.prevent="handleGenerate" class="modern-form">
+                <form @submit.prevent="handleSubmit" class="modern-form">
 
                     <div class="form-group">
                         <label>Campaign Name</label>
                         <div class="input-wrapper">
                             <PhTag class="input-icon" />
-                            <input v-model="eventName" type="text" placeholder="e.g. Summer Sale" required />
+                            <input v-model="form.name" type="text" placeholder="e.g. Summer Sale" required />
                         </div>
                     </div>
 
@@ -31,18 +31,32 @@
                         <label>Discount Value</label>
                         <div class="input-wrapper">
                             <PhPercent class="input-icon" />
-                            <input v-model="discount" type="number" min="1" max="100" placeholder="20" required />
+                            <input v-model="form.discount" type="number" min="1" max="100" placeholder="20" required />
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-generate">
-                        <span>Create Voucher</span>
-                        <PhArrowRight weight="bold" />
-                    </button>
+                    <div v-if="isEditing" class="form-group">
+                        <label>Status</label>
+                        <select v-model="form.status" class="modern-select">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button v-if="isEditing" type="button" class="btn-cancel" @click="cancelEdit">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-generate">
+                            <span v-if="!isEditing">Create Voucher</span>
+                            <span v-else>Update Code</span>
+                            <PhArrowRight weight="bold" />
+                        </button>
+                    </div>
                 </form>
 
                 <transition name="slide-up">
-                    <div v-if="lastGenerated" class="coupon-ticket">
+                    <div v-if="lastGenerated && !isEditing" class="coupon-ticket">
                         <div class="ticket-left">
                             <span class="ticket-label">CODE</span>
                             <strong class="ticket-code">{{ lastGenerated.code }}</strong>
@@ -58,8 +72,8 @@
 
             <div class="panel list-panel">
                 <div class="panel-header">
-                    <h3>Active Coupons</h3>
-                    <div class="count-badge">{{ promoStore.promos.length }} Active</div>
+                    <h3>All Coupons</h3>
+                    <div class="count-badge">{{ promoStore.promos.length }} Items</div>
                 </div>
 
                 <div class="table-wrapper">
@@ -75,25 +89,28 @@
                         </thead>
                         <tbody>
                             <tr v-for="promo in promoStore.promos" :key="promo.id">
-                                <td>
-                                    <span class="campaign-name">{{ promo.name }}</span>
-                                </td>
+                                <td><span class="campaign-name">{{ promo.name }}</span></td>
                                 <td>
                                     <button class="code-chip" @click="copyCode(promo.code)">
                                         {{ promo.code }}
                                         <PhCopy :size="12" class="copy-icon" />
                                     </button>
                                 </td>
+                                <td><span class="discount-tag">{{ promo.discount }}% OFF</span></td>
                                 <td>
-                                    <span class="discount-tag">{{ promo.discount }}% OFF</span>
+                                    <span :class="['status-dot', promo.status.toLowerCase()]">
+                                        {{ promo.status }}
+                                    </span>
                                 </td>
                                 <td>
-                                    <span class="status-dot active">Active</span>
-                                </td>
-                                <td>
-                                    <button class="btn-delete" @click="promoStore.deletePromo(promo.id)">
-                                        <PhTrash :size="16" />
-                                    </button>
+                                    <div class="action-row">
+                                        <button class="btn-icon edit" @click="startEdit(promo)">
+                                            <PhPencilSimple :size="16" />
+                                        </button>
+                                        <button class="btn-icon delete" @click="promoStore.deletePromo(promo.id)">
+                                            <PhTrash :size="16" />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -111,34 +128,67 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { usePromoStore } from '@/store/promoStore'
 import {
     PhMagicWand, PhTag, PhPercent, PhArrowRight,
-    PhCopy, PhTrash, PhTicket
+    PhCopy, PhTrash, PhTicket, PhPencilSimple
 } from '@phosphor-icons/vue'
 
 const promoStore = usePromoStore()
-const eventName = ref('')
-const discount = ref('')
 const lastGenerated = ref(null)
+const isEditing = ref(false)
+const editingId = ref(null)
 
-const handleGenerate = () => {
-    promoStore.generateCode(eventName.value, discount.value)
-    // Get the newly created promo (first in list)
-    lastGenerated.value = promoStore.promos[0]
+// Form State
+const form = reactive({
+    name: '',
+    discount: '',
+    status: 'Active'
+})
 
-    // Reset inputs
-    eventName.value = ''
-    discount.value = ''
+// --- ACTIONS ---
 
-    // Auto-hide ticket preview after 5 seconds
-    setTimeout(() => { lastGenerated.value = null }, 8000)
+const handleSubmit = () => {
+    if (isEditing.value) {
+        // Update Logic
+        promoStore.updatePromo(editingId.value, {
+            name: form.name,
+            discount: form.discount,
+            status: form.status
+        })
+        cancelEdit() // Reset UI
+    } else {
+        // Create Logic
+        promoStore.generateCode(form.name, form.discount)
+        lastGenerated.value = promoStore.promos[0]
+
+        // Reset inputs
+        form.name = ''
+        form.discount = ''
+
+        setTimeout(() => { lastGenerated.value = null }, 8000)
+    }
+}
+
+const startEdit = (promo) => {
+    isEditing.value = true
+    editingId.value = promo.id
+    form.name = promo.name
+    form.discount = promo.discount
+    form.status = promo.status
+}
+
+const cancelEdit = () => {
+    isEditing.value = false
+    editingId.value = null
+    form.name = ''
+    form.discount = ''
+    form.status = 'Active'
 }
 
 const copyCode = (code) => {
     navigator.clipboard.writeText(code)
-    // Optional: Add a toast notification here
     alert(`Copied: ${code}`)
 }
 </script>
@@ -149,7 +199,6 @@ const copyCode = (code) => {
     color: #e4e4e7;
 }
 
-/* HEADER */
 .page-header {
     margin-bottom: 32px;
 }
@@ -167,7 +216,6 @@ const copyCode = (code) => {
     font-size: 0.9rem;
 }
 
-/* GRID LAYOUT */
 .promo-grid {
     display: grid;
     grid-template-columns: 350px 1fr;
@@ -175,13 +223,28 @@ const copyCode = (code) => {
     align-items: start;
 }
 
-/* PANELS SHARED STYLES */
+/* PANELS */
 .panel {
     background: #12141a;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+/* Editing Mode Highlight */
+.create-panel.editing-mode {
+    border-color: #f59e0b;
+}
+
+.create-panel.editing-mode .icon-badge {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+}
+
+.create-panel.editing-mode .btn-generate {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
 }
 
 .panel-header {
@@ -199,7 +262,6 @@ const copyCode = (code) => {
     color: white;
 }
 
-/* LEFT PANEL: GENERATOR */
 .icon-badge {
     width: 36px;
     height: 36px;
@@ -211,6 +273,7 @@ const copyCode = (code) => {
     justify-content: center;
     margin-right: 12px;
     font-size: 1.2rem;
+    transition: 0.3s;
 }
 
 .modern-form {
@@ -243,7 +306,8 @@ const copyCode = (code) => {
     font-size: 1.1rem;
 }
 
-.input-wrapper input {
+.input-wrapper input,
+.modern-select {
     width: 100%;
     background: #09090b;
     border: 1px solid #27272a;
@@ -255,12 +319,26 @@ const copyCode = (code) => {
     transition: 0.3s;
 }
 
-.input-wrapper input:focus {
+.modern-select {
+    padding: 12px;
+    appearance: none;
+}
+
+/* Standard padding for select */
+
+.input-wrapper input:focus,
+.modern-select:focus {
     border-color: var(--color-accent);
     background: #000;
 }
 
+.form-actions {
+    display: flex;
+    gap: 10px;
+}
+
 .btn-generate {
+    flex: 1;
     background: linear-gradient(135deg, var(--color-accent), #f43f5e);
     border: none;
     padding: 14px;
@@ -278,10 +356,26 @@ const copyCode = (code) => {
 
 .btn-generate:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5);
+    filter: brightness(1.1);
 }
 
-/* COUPON TICKET */
+.btn-cancel {
+    background: transparent;
+    border: 1px solid #333;
+    color: #aaa;
+    padding: 0 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #1f2937;
+    color: white;
+}
+
+/* TICKET */
 .coupon-ticket {
     margin: 0 24px 24px;
     background: linear-gradient(135deg, #10b981, #059669);
@@ -333,7 +427,7 @@ const copyCode = (code) => {
     background: rgba(0, 0, 0, 0.2);
 }
 
-/* RIGHT PANEL: LIST */
+/* TABLE */
 .count-badge {
     font-size: 0.75rem;
     background: rgba(255, 255, 255, 0.1);
@@ -410,6 +504,7 @@ const copyCode = (code) => {
     align-items: center;
     gap: 6px;
     color: #ccc;
+    font-weight: 500;
 }
 
 .status-dot::before {
@@ -428,18 +523,44 @@ const copyCode = (code) => {
     background: #10b981;
 }
 
-.btn-delete {
-    background: transparent;
-    border: none;
+.status-dot.inactive {
     color: #ef4444;
+}
+
+.status-dot.inactive::before {
+    background: #ef4444;
+}
+
+.action-row {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
     cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: 0.2s;
 }
 
-.btn-delete:hover {
+.btn-icon.edit {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+}
+
+.btn-icon.delete {
     background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.btn-icon:hover {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
 }
 
 .empty-state {

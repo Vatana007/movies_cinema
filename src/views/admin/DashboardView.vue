@@ -1,100 +1,125 @@
 <template>
-    <div class="dashboard-grid">
+    <div class="dashboard-view">
 
-        <div class="stat-card">
-            <div class="stat-icon revenue">
-                <PhCurrencyDollar :size="24" />
+        <div class="welcome-banner">
+            <div class="welcome-text">
+                <h1>Dashboard Overview</h1>
+                <p>Welcome back, Administrator. Here is what's happening today.</p>
             </div>
-            <div>
-                <p class="stat-label">Total Revenue</p>
-                <h3>${{ stats.revenue.toFixed(2) }}</h3>
+            <div class="date-badge">
+                <PhCalendarBlank :size="18" />
+                <span>{{ currentDate }}</span>
             </div>
         </div>
 
-        <div class="stat-card">
-            <div class="stat-icon bookings">
-                <PhTicket :size="24" />
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon-wrapper gradient-green">
+                    <PhCurrencyDollar :size="24" weight="fill" />
+                </div>
+                <div class="stat-content">
+                    <span class="label">Total Revenue</span>
+                    <h3 class="value">${{ stats.revenue.toFixed(2) }}</h3>
+                    <span class="trend up">
+                        <PhTrendUp :size="14" /> +12.5%
+                    </span>
+                </div>
             </div>
-            <div>
-                <p class="stat-label">Total Bookings</p>
-                <h3>{{ stats.bookings }}</h3>
-            </div>
-        </div>
 
-        <div class="stat-card">
-            <div class="stat-icon users">
-                <PhUsers :size="24" />
+            <div class="stat-card">
+                <div class="stat-icon-wrapper gradient-blue">
+                    <PhTicket :size="24" weight="fill" />
+                </div>
+                <div class="stat-content">
+                    <span class="label">Tickets Sold</span>
+                    <h3 class="value">{{ stats.tickets }}</h3>
+                    <span class="trend up">
+                        <PhTrendUp :size="14" /> +5.2%
+                    </span>
+                </div>
             </div>
-            <div>
-                <p class="stat-label">Active Users</p>
-                <h3>{{ stats.users }}</h3>
-            </div>
-        </div>
 
-        <div class="stat-card">
-            <div class="stat-icon movies">
-                <PhFilmStrip :size="24" />
+            <div class="stat-card">
+                <div class="stat-icon-wrapper gradient-orange">
+                    <PhUsers :size="24" weight="fill" />
+                </div>
+                <div class="stat-content">
+                    <span class="label">Active Users</span>
+                    <h3 class="value">{{ stats.users }}</h3>
+                    <span class="trend down">
+                        <PhTrendDown :size="14" /> -1.1%
+                    </span>
+                </div>
             </div>
-            <div>
-                <p class="stat-label">Movies Listed</p>
-                <h3>{{ stats.movies }}</h3>
-            </div>
-        </div>
 
-        <div class="chart-section">
-            <div class="section-header">
-                <h3>Revenue Overview</h3>
-                <select class="chart-filter">
-                    <option>This Week</option>
-                </select>
-            </div>
-            <div class="bar-chart">
-                <div v-for="(bar, index) in chartData" :key="index" class="bar-col">
-                    <div class="bar-track">
-                        <div class="bar-fill" :style="{ height: bar.percent + '%' }">
-                            <span class="tooltip">${{ bar.value }}</span>
-                        </div>
-                    </div>
-                    <span class="bar-label">{{ bar.day }}</span>
+            <div class="stat-card">
+                <div class="stat-icon-wrapper gradient-purple">
+                    <PhFilmStrip :size="24" weight="fill" />
+                </div>
+                <div class="stat-content">
+                    <span class="label">Total Movies</span>
+                    <h3 class="value">{{ stats.movies }}</h3>
+                    <span class="sub-label">Library Assets</span>
                 </div>
             </div>
         </div>
 
-        <div class="table-section">
-            <div class="section-header">
-                <h3>Recent Transactions</h3>
-                <router-link to="/admin/bookings" class="view-all">View All</router-link>
-            </div>
-            <table class="dashboard-table">
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Movie</th>
-                        <th>Date</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="t in recentTransactions" :key="t.id">
-                        <td>
-                            <div class="user-cell">
-                                <div class="mini-avatar">{{ t.user.charAt(0) }}</div>
-                                {{ t.user }}
-                            </div>
-                        </td>
-                        <td class="movie-cell">{{ t.movie }}</td>
-                        <td>{{ formatDate(t.id) }}</td>
-                        <td class="amount">+${{ t.total }}</td>
-                        <td><span class="status-dot"></span> Confirmed</td>
-                    </tr>
-                    <tr v-if="recentTransactions.length === 0">
-                        <td colspan="5" class="empty-msg">No transactions yet.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="split-section">
 
+            <div class="chart-panel">
+                <div class="panel-header">
+                    <h3>Revenue Analytics</h3>
+                    <select class="chart-filter">
+                        <option>This Week</option>
+                        <option>Last Month</option>
+                    </select>
+                </div>
+
+                <div class="bar-chart-container">
+                    <div class="chart-grid-lines">
+                        <span>$1k</span>
+                        <span>$500</span>
+                        <span>$0</span>
+                    </div>
+                    <div class="bars-wrapper">
+                        <div v-for="(day, index) in chartData" :key="index" class="bar-group">
+                            <div class="bar-track">
+                                <div class="bar-fill" :style="{ height: day.percent + '%' }" :title="'$' + day.value">
+                                </div>
+                            </div>
+                            <span class="bar-label">{{ day.label }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-panel">
+                <div class="panel-header">
+                    <h3>Recent Bookings</h3>
+                    <router-link to="/admin/bookings" class="view-all">View All</router-link>
+                </div>
+
+                <div class="activity-list">
+                    <div v-for="t in recentTransactions" :key="t.id" class="activity-item">
+                        <div class="item-icon">
+                            <PhReceipt :size="20" />
+                        </div>
+                        <div class="item-details">
+                            <span class="item-title">{{ t.movie }}</span>
+                            <span class="item-meta">{{ t.user }} • {{ formatDate(t.id) }}</span>
+                        </div>
+                        <div class="item-amount">
+                            +${{ (Number(t.total) || 0).toFixed(2) }}
+                        </div>
+                    </div>
+
+                    <div v-if="recentTransactions.length === 0" class="empty-list">
+                        <p>No recent activity.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </template>
 
@@ -102,163 +127,266 @@
 import { ref, onMounted, computed } from 'vue'
 import { useMovieStore } from '@/store/movieStore'
 import {
-    PhCurrencyDollar, PhTicket, PhUsers, PhFilmStrip
+    PhCurrencyDollar, PhTicket, PhUsers, PhFilmStrip,
+    PhCalendarBlank, PhTrendUp, PhTrendDown, PhReceipt
 } from '@phosphor-icons/vue'
 
 const movieStore = useMovieStore()
-
-const stats = ref({
-    revenue: 0,
-    bookings: 0,
-    users: 0,
-    movies: 0
-})
-
+const stats = ref({ revenue: 0, tickets: 0, users: 0, movies: 0 })
 const recentTransactions = ref([])
+const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
 
-// Load Data from LocalStorage (Simulating Backend)
-const loadDashboardData = () => {
-    const bookings = JSON.parse(localStorage.getItem('allBookings')) || []
-    const users = JSON.parse(localStorage.getItem('usersDB')) || []
-
-    // Calculate Stats
-    stats.value.bookings = bookings.length
-    stats.value.users = users.length
-    stats.value.movies = movieStore.movies.length
-
-    // Sum Revenue (Filtering out cancelled if you implemented that status)
-    stats.value.revenue = bookings.reduce((sum, b) => sum + (b.total || 0), 0)
-
-    // Get Last 5 Transactions
-    recentTransactions.value = bookings.slice(-5).reverse()
-}
-
-// Mock Chart Data (Since we don't have real historical dates for all)
+// Mock Chart Data (Visual Only)
 const chartData = [
-    { day: 'Mon', value: 120, percent: 30 },
-    { day: 'Tue', value: 200, percent: 50 },
-    { day: 'Wed', value: 150, percent: 40 },
-    { day: 'Thu', value: 300, percent: 75 },
-    { day: 'Fri', value: 250, percent: 60 },
-    { day: 'Sat', value: 400, percent: 100 },
-    { day: 'Sun', value: 350, percent: 85 },
+    { label: 'Mon', value: 120, percent: 30 },
+    { label: 'Tue', value: 210, percent: 50 },
+    { label: 'Wed', value: 150, percent: 40 },
+    { label: 'Thu', value: 320, percent: 75 },
+    { label: 'Fri', value: 280, percent: 65 },
+    { label: 'Sat', value: 450, percent: 95 },
+    { label: 'Sun', value: 380, percent: 80 },
 ]
 
-const formatDate = (timestamp) => {
-    // timestamp is likely part of ID like BK-1234, so we just return Today for demo
-    return 'Today'
+const loadDashboardData = () => {
+    try {
+        // 1. Load Data
+        const bookingsRaw = localStorage.getItem('allBookings')
+        const usersRaw = localStorage.getItem('usersDB')
+
+        const bookings = bookingsRaw ? JSON.parse(bookingsRaw) : []
+        const users = usersRaw ? JSON.parse(usersRaw) : []
+
+        // 2. Calculate Stats
+        stats.value.users = users.length
+        stats.value.movies = movieStore.movies.length
+
+        // Filter confirmed bookings only
+        const confirmed = bookings.filter(b => b.status === 'Confirmed')
+
+        stats.value.revenue = confirmed.reduce((sum, b) => sum + (Number(b.total) || 0), 0)
+        stats.value.tickets = confirmed.reduce((sum, b) => sum + (Array.isArray(b.seats) ? b.seats.length : 1), 0)
+
+        // 3. Get Recent (Last 5)
+        // Sort descending by ID (assuming ID is timestamp or sequential)
+        const sorted = [...bookings].sort((a, b) => String(b.id).localeCompare(String(a.id)))
+        recentTransactions.value = sorted.slice(0, 5)
+
+    } catch (e) {
+        console.error("Dashboard Load Error:", e)
+    }
+}
+
+const formatDate = (id) => {
+    // Try to parse ID as date, else Today
+    const d = new Date(parseInt(id) || Date.now())
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 onMounted(loadDashboardData)
 </script>
 
 <style scoped>
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto 1fr;
-    gap: 24px;
+.dashboard-view {
+    padding: 30px;
+    color: #e4e4e7;
+    font-family: 'Inter', sans-serif;
 }
 
-/* 1. Stat Cards */
+/* 1. Welcome Section */
+.welcome-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+}
+
+.welcome-text h1 {
+    margin: 0 0 8px 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
+}
+
+.welcome-text p {
+    margin: 0;
+    color: #888;
+}
+
+.date-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+/* 2. Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
 .stat-card {
-    background: #18181b;
+    background: #12141a;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
-    padding: 24px;
+    padding: 20px;
     display: flex;
     align-items: center;
     gap: 16px;
-    transition: 0.2s;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
 }
 
-.stat-icon {
-    width: 48px;
-    height: 48px;
+.stat-icon-wrapper {
+    width: 50px;
+    height: 50px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-}
-
-.stat-icon.revenue {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-}
-
-.stat-icon.bookings {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-}
-
-.stat-icon.users {
-    background: rgba(249, 115, 22, 0.1);
-    color: #f97316;
-}
-
-.stat-icon.movies {
-    background: rgba(236, 72, 153, 0.1);
-    color: #ec4899;
-}
-
-.stat-label {
-    margin: 0 0 4px 0;
-    font-size: 0.85rem;
-    color: #888;
-}
-
-.stat-card h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
     color: white;
 }
 
-/* 2. Chart Section */
-.chart-section {
-    grid-column: span 2;
-    background: #18181b;
+.gradient-green {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+.gradient-blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+.gradient-orange {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
+}
+
+.gradient-purple {
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3);
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-content .label {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.stat-content .value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 4px 0;
+}
+
+.trend {
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.trend.up {
+    color: #10b981;
+}
+
+.trend.down {
+    color: #ef4444;
+}
+
+.sub-label {
+    font-size: 0.75rem;
+    color: #555;
+}
+
+/* 3. Split Section */
+.split-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+.chart-panel,
+.activity-panel {
+    background: #12141a;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.section-header {
+.panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
-.section-header h3 {
+.panel-header h3 {
     margin: 0;
     font-size: 1.1rem;
+    color: white;
+    font-weight: 600;
 }
 
+/* Chart Styling */
 .chart-filter {
-    background: #27272a;
-    border: none;
-    color: #aaa;
+    background: #1f2229;
+    color: #ccc;
+    border: 1px solid #333;
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 0.8rem;
 }
 
-.bar-chart {
+.bar-chart-container {
+    display: flex;
+    height: 200px;
+    position: relative;
+    padding-left: 40px;
+}
+
+.chart-grid-lines {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #555;
+    font-size: 0.7rem;
+}
+
+.bars-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    height: 200px;
-    padding-top: 20px;
+    width: 100%;
+    padding-left: 20px;
 }
 
-.bar-col {
+.bar-group {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -275,39 +403,17 @@ onMounted(loadDashboardData)
 }
 
 .bar-fill {
-    width: 12px;
-    background: linear-gradient(to top, var(--color-accent), #ff6b6b);
+    width: 14px;
+    background: var(--color-accent);
     border-radius: 20px;
-    position: relative;
     transition: height 0.5s ease;
-    cursor: pointer;
+    opacity: 0.8;
 }
 
 .bar-fill:hover {
-    width: 16px;
-    filter: brightness(1.2);
-}
-
-.bar-fill:hover .tooltip {
     opacity: 1;
-    transform: translateX(-50%) translateY(-10px);
-}
-
-.tooltip {
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    color: black;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.2s;
-    white-space: nowrap;
+    transform: scaleX(1.2);
+    cursor: pointer;
 }
 
 .bar-label {
@@ -315,100 +421,81 @@ onMounted(loadDashboardData)
     color: #666;
 }
 
-/* 3. Table Section */
-.table-section {
-    grid-column: span 2;
-    background: #18181b;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 24px;
-}
-
+/* Activity List */
 .view-all {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--color-accent);
     text-decoration: none;
+    font-weight: 500;
 }
 
-.dashboard-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.dashboard-table th {
-    text-align: left;
-    font-size: 0.75rem;
-    color: #666;
-    padding-bottom: 12px;
-    text-transform: uppercase;
-}
-
-.dashboard-table td {
-    padding: 12px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 0.9rem;
-    color: #ddd;
-}
-
-.user-cell {
+.activity-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.mini-avatar {
-    width: 24px;
-    height: 24px;
-    background: #333;
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.item-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
-    color: #aaa;
+    color: #ccc;
 }
 
-.amount {
+.item-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
+}
+
+.item-meta {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.item-amount {
+    font-weight: 700;
     color: #10b981;
-    font-weight: 600;
+    font-size: 0.9rem;
 }
 
-.status-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background: #10b981;
-    border-radius: 50%;
-    margin-right: 6px;
-}
-
-.movie-cell {
-    max-width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.empty-msg {
+.empty-list {
     text-align: center;
     color: #555;
+    font-size: 0.9rem;
     padding: 20px;
 }
 
 /* Responsive */
 @media (max-width: 1100px) {
-    .dashboard-grid {
+    .stats-grid {
         grid-template-columns: 1fr 1fr;
     }
 
-    .stat-card {
-        grid-column: span 1;
-    }
-
-    .chart-section,
-    .table-section {
-        grid-column: span 2;
+    .split-section {
+        grid-template-columns: 1fr;
     }
 }
 </style>

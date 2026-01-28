@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 
 export const useMovieStore = defineStore('movie', () => {
 
-    // --- DEFAULT DATABASE (Used if no LocalStorage data exists) ---
+    // --- DEFAULT DATABASE ---
     const defaultMovies = [
         {
             id: 1,
@@ -62,8 +62,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 54m',
             rating: 4.5,
             synopsis: 'Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land. However, when they get a chance to go to the real world, they soon discover the joys and perils of living among humans.',
-            poster: 'https://image.tmdb.org/t/p/original/iuFNMS8U5cb6xf8gc2484GyAHuq.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/ctMserH8g2SeOAnCw5gFjdQF8mo.jpg',
+            poster: 'https://infinity-creative.co.uk/wp-content/uploads/2023/07/From-Dreamhouse-to-Icon-The-Brand-Story-of-Barbie.jpg',
+            backdrop: 'https://juliapistor.com/wp-content/uploads/2023/12/barbie-mattel-julia-pistor.png',
             trailer: 'https://www.youtube.com/embed/pBk4NYhWNMM',
             cast: [
                 { name: 'Margot Robbie', character: 'Barbie', image: 'https://image.tmdb.org/t/p/w200/euDPyqLnuwaT5j8E9s9r6a3.jpg' },
@@ -126,8 +126,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 28m',
             rating: 4.8,
             synopsis: 'Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: "inception", the implantation of another person\'s idea into a target\'s subconscious.',
-            poster: 'https://image.tmdb.org/t/p/original/9gk7admal4BNQPnx38e8RPrzrCn.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/s3TBrRGB1iav7gFOCNx3H31MoES.jpg',
+            poster: 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg',
+            backdrop: 'https://i0.wp.com/farm5.static.flickr.com/4079/4900999189_27b899b7cb.jpg',
             trailer: 'https://www.youtube.com/embed/YoHD9XEInc0',
             cast: [
                 { name: 'Leonardo DiCaprio', character: 'Dom Cobb', image: 'https://image.tmdb.org/t/p/w200/wo2hJpn04vbtmh0B9utCFdsQhxM.jpg' },
@@ -158,8 +158,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 20m',
             rating: 4.6,
             synopsis: 'An aging Chinese immigrant is swept up in an insane adventure, where she alone can save what’s important by connecting with the lives she could have led in other universes.',
-            poster: 'https://image.tmdb.org/t/p/original/w3LxiVYdWWRvEVBA5YTTPOFf9tq.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/fIWIFq3yT3e7yM0.jpg',
+            poster: 'https://m.media-amazon.com/images/I/71rKqMu+tbL._AC_UF350,350_QL80_.jpg',
+            backdrop: 'https://blog.frame.io/wp-content/uploads/2022/04/B0443-featured-image-1.jpg',
             trailer: 'https://www.youtube.com/embed/wxN1T1uxQ2g',
             cast: [
                 { name: 'Michelle Yeoh', character: 'Evelyn Wang', image: 'https://image.tmdb.org/t/p/w200/q7dY7.jpg' },
@@ -318,7 +318,7 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 45m',
             rating: 4.9,
             synopsis: 'Despite his family’s baffling generations-old ban on music, Miguel dreams of becoming an accomplished musician like his idol, Ernesto de la Cruz. Desperate to prove his talent, Miguel finds himself in the stunning and colorful Land of the Dead following a mysterious chain of events.',
-            poster: 'https://image.tmdb.org/t/p/original/eKi8dIrr8voB6vks2nIo2Cat34q.jpg',
+            poster: 'https://image.tmdb.org/t/p/original/gGEsBPAijhVUFoiNpgZXqRVWJt2.jpg',
             backdrop: 'https://image.tmdb.org/t/p/original/askg3SMvhqEl4OL52YuvdtX40Xy.jpg',
             trailer: 'https://www.youtube.com/embed/Ga6RYezw6jk',
             cast: [
@@ -334,8 +334,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 05m',
             rating: 4.9,
             synopsis: 'A young girl, Chihiro, becomes trapped in a strange new world of spirits. When her parents undergo a mysterious transformation, she must call upon the courage she never knew she had to free her family.',
-            poster: 'https://image.tmdb.org/t/p/original/39wmItIWsg5sZMyRUKGnSxQbUgZ.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/bTP.jpg',
+            poster: 'https://m.media-amazon.com/images/M/MV5BNTEyNmEwOWUtYzkyOC00ZTQ4LTllZmUtMjk0Y2YwOGUzYjRiXkEyXkFqcGc@._V1_.jpg',
+            backdrop: 'https://i.ebayimg.com/images/g/YewAAOSwwu9nJuwO/s-l1200.jpg',
             trailer: 'https://www.youtube.com/embed/ByXuk9QqQkk',
             cast: [
                 { name: 'Rumi Hiiragi', character: 'Chihiro (voice)', image: 'https://image.tmdb.org/t/p/w200/z.jpg' },
@@ -382,8 +382,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 47m',
             rating: 4.8,
             synopsis: 'Under the direction of a ruthless instructor, a talented young drummer begins to pursue perfection at any cost, even his humanity.',
-            poster: 'https://image.tmdb.org/t/p/original/7fn624j58RPbcUYW237HKPVcV5q.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/vVpEOvdxVn2hxPzpXtxHRHMSV9k.jpg',
+            poster: 'https://cdn.displate.com/artwork/857x1200/2025-09-08/82c5e624-bd10-45a0-b82b-4d6072a60122.jpg',
+            backdrop: 'https://twinchaptertrading.mta4.sitegiant.cc/image/twinchaptertrading/image/cache/data/all_product_images/product-4422/50-1343x1488.jpg',
             trailer: 'https://www.youtube.com/embed/7d_jQycdQGo',
             cast: [
                 { name: 'Miles Teller', character: 'Andrew Neiman', image: 'https://image.tmdb.org/t/p/w200/4h8Wp3e5O5q7gR9.jpg' },
@@ -398,8 +398,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '3h 21m',
             rating: 5.0,
             synopsis: 'Aragorn is revealed as the heir to the ancient kings as he, Gandalf and the other members of the broken fellowship struggle to save Gondor from Sauron\'s forces. Meanwhile, Frodo and Sam take the ring closer to the heart of Mordor, the dark lord\'s realm.',
-            poster: 'https://image.tmdb.org/t/p/original/rCzpDGLbOoPwLjy3OAm5NUPOtrC.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/lXhgCODAbBXL5buk9yEmTpOoOgC.jpg',
+            poster: 'https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg',
+            backdrop: 'https://literariness.org/wp-content/uploads/2021/02/wp4119629.jpg',
             trailer: 'https://www.youtube.com/embed/r5X-hFf6Bwo',
             cast: [
                 { name: 'Elijah Wood', character: 'Frodo Baggins', image: 'https://image.tmdb.org/t/p/w200/7usqHed1I9R5Xe89r1Uz031ol0c.jpg' },
@@ -430,7 +430,7 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '3h 15m',
             rating: 4.9,
             synopsis: 'The true story of how Oskar Schindler, a German industrialist and member of the Nazi party, saved the lives of more than a thousand Jewish refugees from the Holocaust by employing them in his factories during World War II.',
-            poster: 'https://image.tmdb.org/t/p/original/sF1U4EUQS8YHUYjNl3pTXMYC.jpg',
+            poster: 'https://image.tmdb.org/t/p/original/doGEE2DgjET0XK0k9BozsMBES5H.jpg',
             backdrop: 'https://image.tmdb.org/t/p/original/zb6fM1CX41D9rF9hdgclu0peUmy.jpg',
             trailer: 'https://www.youtube.com/embed/gG22XNhtnoY',
             cast: [
@@ -462,8 +462,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 49m',
             rating: 4.8,
             synopsis: 'As U.S. troops storm the beaches of Normandy, three brothers lie dead on the battlefield, with a fourth trapped behind enemy lines. Ranger captain John Miller and seven men are tasked with penetrating German-held territory and bringing the boy home.',
-            poster: 'https://image.tmdb.org/t/p/original/uqx37mW8zNunH92GSsDnM22PF2j.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/frYDnfc.jpg',
+            poster: 'https://i.pinimg.com/474x/d9/03/67/d9036710e387d04fb5c74d37159972a9.jpg',
+            backdrop: 'https://images.alphacoders.com/640/640390.jpg',
             trailer: 'https://www.youtube.com/embed/zwhP5b4tD6g',
             cast: [
                 { name: 'Tom Hanks', character: 'Capt. John H. Miller', image: 'https://image.tmdb.org/t/p/w200/xndWFsBlClOJFRdhSt4NBwiPq2o.jpg' },
@@ -478,8 +478,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '3h 09m',
             rating: 4.9,
             synopsis: 'A supernatural tale set on death row in a Southern prison, where gentle giant John Coffey possesses the mysterious power to heal people\'s ailments. When the cell block\'s head guard, Paul Edgecomb, recognizes Coffey\'s miraculous gift, he tries desperately to help stave off the condemned man\'s execution.',
-            poster: 'https://image.tmdb.org/t/p/original/velWPhVMQeQKcxggvrU8YQ.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/l6hQWH9eDksNJLi.jpg',
+            poster: 'https://image.tmdb.org/t/p/original/ejYzY2mL304gSXPJT3pJesSMz2z.jpg',
+            backdrop: 'https://wallpapercat.com/w/full/d/4/7/58005-3840x2160-desktop-4k-the-green-mile-wallpaper-photo.jpg',
             trailer: 'https://www.youtube.com/embed/Ki4haFrOSGc',
             cast: [
                 { name: 'Tom Hanks', character: 'Paul Edgecomb', image: 'https://image.tmdb.org/t/p/w200/xndWFsBlClOJFRdhSt4NBwiPq2o.jpg' },
@@ -494,8 +494,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 38m',
             rating: 4.8,
             synopsis: 'WALL·E is the last robot left on an Earth that has been overrun with garbage and all humans have fled to outer space. For 700 years he has continued to try and clean up the mess, but has developed some rather interesting human-like qualities.',
-            poster: 'https://image.tmdb.org/t/p/original/hNhL9.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/fK5ssgvtI43z1r6.jpg',
+            poster: 'https://m.media-amazon.com/images/M/MV5BMzk0ZGMzMDYtMDJkYS00NTdhLWJlZWUtMTdhOTJkOTM3NDUwXkEyXkFqcGc@._V1_.jpg',
+            backdrop: 'https://posterspy.com/wp-content/uploads/2021/08/POSTERSFORPOSTERSPY4-480x338.jpg',
             trailer: 'https://www.youtube.com/embed/CZ1CATNbXg0',
             cast: [
                 { name: 'Ben Burtt', character: 'WALL·E (voice)', image: 'https://image.tmdb.org/t/p/w200/b1.jpg' },
@@ -510,8 +510,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 43m',
             rating: 4.7,
             synopsis: 'Truman Burbank is the star of "The Truman Show", a 24-hour-a-day reality TV show that broadcasts every aspect of his life to a nation of voyeurs without his knowledge.',
-            poster: 'https://image.tmdb.org/t/p/original/vuuxNik.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/yU.jpg',
+            poster: 'https://i.pinimg.com/736x/2e/9e/da/2e9eda32240e70e7c4568f6cfa96c3c7.jpg',
+            backdrop: 'https://popcult.blog/wp-content/uploads/2022/01/truman-show-banner.png',
             trailer: 'https://www.youtube.com/embed/dako',
             cast: [
                 { name: 'Jim Carrey', character: 'Truman Burbank', image: 'https://image.tmdb.org/t/p/w200/z.jpg' },
@@ -526,8 +526,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 36m',
             rating: 4.8,
             synopsis: '78-year-old Carl Fredricksen travels to Paradise Falls in his house equipped with balloons, inadvertently taking a young stowaway.',
-            poster: 'https://image.tmdb.org/t/p/original/vpbaStTMt8qqXA.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/h.jpg',
+            poster: 'https://soundvapors.com/wp-content/uploads/2020/11/up.jpg',
+            backdrop: 'https://m.media-amazon.com/images/M/MV5BMTQxMDA0MDI4MV5BMl5BanBnXkFtZTcwMTU5OTIzMw@@._V1_QL75_UX391_.jpg',
             trailer: 'https://www.youtube.com/embed/ORFWdXl_zJ4',
             cast: [
                 { name: 'Ed Asner', character: 'Carl Fredricksen (voice)', image: 'https://image.tmdb.org/t/p/w200/a.jpg' },
@@ -558,8 +558,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 31m',
             rating: 4.7,
             synopsis: 'To take down South Boston\'s Irish Mafia, the police send in one of their own to infiltrate the underworld, not realizing the syndicate has done likewise.',
-            poster: 'https://image.tmdb.org/t/p/original/nT.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/p.jpg',
+            poster: 'https://m.media-amazon.com/images/M/MV5BYmE2NDE1ZjMtZDE2ZS00MGU1LWJiN2MtYjYxY2YyZTkyMzAyXkEyXkFqcGc@._V1_.jpg',
+            backdrop: 'https://m.media-amazon.com/images/I/71XlLHgkLFL._AC_UF894,1000_QL80_.jpg',
             trailer: 'https://www.youtube.com/embed/iojhqm0JTW4',
             cast: [
                 { name: 'Leonardo DiCaprio', character: 'Billy Costigan', image: 'https://image.tmdb.org/t/p/w200/wo2hJpn04vbtmh0B9utCFdsQhxM.jpg' },
@@ -574,8 +574,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 10m',
             rating: 4.8,
             synopsis: 'A mysterious story of two magicians whose intense rivalry leads them on a life-long battle for supremacy -- full of obsession, deceit and jealousy with dangerous and deadly consequences.',
-            poster: 'https://image.tmdb.org/t/p/original/t.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/y.jpg',
+            poster: 'https://cdn.displate.com/artwork/857x1200/2024-10-31/f47fff10-31e6-4319-b06e-2e3f2f87560a.jpg',
+            backdrop: 'https://images8.alphacoders.com/112/1121403.jpg',
             trailer: 'https://www.youtube.com/embed/o4gHCmTQDVI',
             cast: [
                 { name: 'Hugh Jackman', character: 'Robert Angier', image: 'https://image.tmdb.org/t/p/w200/o.jpg' },
@@ -590,8 +590,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 53m',
             rating: 4.7,
             synopsis: 'Leonard Shelby is tracking down the man who raped and murdered his wife. The difficulty of locating his wife\'s killer, however, is compounded by the fact that he suffers from a rare, untreatable form of memory loss.',
-            poster: 'https://image.tmdb.org/t/p/original/yu.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/q.jpg',
+            poster: 'https://res.cloudinary.com/jerrick/image/upload/v1752208911/6870960ecc787d001d0844f7.jpg',
+            backdrop: 'https://m.media-amazon.com/images/M/MV5BOTVmZTFhNmEtNDE3MS00MjhhLWI2ZDEtYzkyNjgzZGNlMTBhXkEyXkFqcGc@._V1_.jpg',
             trailer: 'https://www.youtube.com/embed/0vS0E9bBSL0',
             cast: [
                 { name: 'Guy Pearce', character: 'Leonard Shelby', image: 'https://image.tmdb.org/t/p/w200/v.jpg' },
@@ -606,8 +606,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 45m',
             rating: 4.8,
             synopsis: 'With the help of a German bounty hunter, a freed slave sets out to rescue his wife from a brutal Mississippi plantation owner.',
-            poster: 'https://image.tmdb.org/t/p/original/7o.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/2.jpg',
+            poster: 'https://limelightmovieart.com/wp-content/uploads/2023/05/Django-Unchained-US-1S-Adv.-2012-fifth-copy-655x989.jpg',
+            backdrop: 'https://10wallpaper.com/wallpaper/1920x1080/1305/Django_Unchained_Movie_HD_Desktop_Wallpaper_03_1920x1080.jpg',
             trailer: 'https://www.youtube.com/embed/0fUCuvNlOCg',
             cast: [
                 { name: 'Jamie Foxx', character: 'Django', image: 'https://image.tmdb.org/t/p/w200/h.jpg' },
@@ -622,8 +622,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '3h 00m',
             rating: 4.7,
             synopsis: 'Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.',
-            poster: 'https://image.tmdb.org/t/p/original/p.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/c.jpg',
+            poster: 'https://i.ebayimg.com/images/g/TyUAAOSwjxZgz6Rj/s-l400.jpg',
+            backdrop: 'https://wallpapers.com/images/hd/the-wolf-of-wall-street-5yh17izfpouw7xrg.jpg',
             trailer: 'https://www.youtube.com/embed/iszwuX1AK6A',
             cast: [
                 { name: 'Leonardo DiCaprio', character: 'Jordan Belfort', image: 'https://image.tmdb.org/t/p/w200/wo2hJpn04vbtmh0B9utCFdsQhxM.jpg' },
@@ -638,8 +638,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 00m',
             rating: 4.8,
             synopsis: 'An apocalyptic story set in the furthest reaches of our planet, in a stark desert landscape where humanity is broken, and almost everyone is crazed fighting for the necessities of life. Within this world exist two rebels on the run who just might be able to restore order.',
-            poster: 'https://image.tmdb.org/t/p/original/8t.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/g.jpg',
+            poster: 'https://mir-s3-cdn-cf.behance.net/project_modules/hd/a6277c169328487.644a87f7d7f4f.jpg',
+            backdrop: 'https://w0.peakpx.com/wallpaper/924/404/HD-wallpaper-movie-mad-max-fury-road-charlize-theron-imperator-furiosa-max-rockatansky-tom-hardy.jpg',
             trailer: 'https://www.youtube.com/embed/hEJnMQG9ev8',
             cast: [
                 { name: 'Tom Hardy', character: 'Max Rockatansky', image: 'https://image.tmdb.org/t/p/w200/y.jpg' },
@@ -654,8 +654,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 17m',
             rating: 4.8,
             synopsis: 'In the near future, a weary Logan cares for an ailing Professor X in a hideout on the Mexican border. But Logan\'s attempts to hide from the world and his legacy are upended when a young mutant arrives, being pursued by dark forces.',
-            poster: 'https://image.tmdb.org/t/p/original/f.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/5.jpg',
+            poster: 'https://lumiere-a.akamaihd.net/v1/images/au_movies_20cs_logan_poster_f1907839.jpeg',
+            backdrop: 'https://blog.richersounds.com/wp-content/uploads/2017/03/logan-1024x538.jpg',
             trailer: 'https://www.youtube.com/embed/Div0iP65aZo',
             cast: [
                 { name: 'Hugh Jackman', character: 'Logan / Wolverine', image: 'https://image.tmdb.org/t/p/w200/o.jpg' },
@@ -670,8 +670,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 35m',
             rating: 4.9,
             synopsis: 'Growing up can be a bumpy road, and it\'s no exception for Riley, who is uprooted from her Midwest life when her father starts a new job in San Francisco. Riley is guided by her emotions - Joy, Fear, Anger, Disgust and Sadness.',
-            poster: 'https://image.tmdb.org/t/p/original/l.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/j.jpg',
+            poster: 'https://samcdesignblog.wordpress.com/wp-content/uploads/2020/09/inside-out.jpg',
+            backdrop: 'https://4kwallpapers.com/images/wallpapers/pixar-inside-out-2-2560x1440-17087.jpg',
             trailer: 'https://www.youtube.com/embed/yRUAzGQ3nSY',
             cast: [
                 { name: 'Amy Poehler', character: 'Joy (voice)', image: 'https://image.tmdb.org/t/p/w200/k.jpg' },
@@ -686,8 +686,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 40m',
             rating: 4.8,
             synopsis: 'Clownfish Marlin lives in the Great Barrier Reef and loses his son, Nemo. After he ventures into the open sea, despite his father\'s constant warnings about many of the ocean\'s dangers, Nemo is abducted by a boat and netted up and sent to a dentist\'s office in Sydney.',
-            poster: 'https://image.tmdb.org/t/p/original/gg.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/33.jpg',
+            poster: 'https://s3.amazonaws.com/nightjarprod/content/uploads/sites/344/2024/07/11065839/eHuGQ10FUzK1mdOY69wF5pGgEf5-683x1024.jpg',
+            backdrop: 'https://www.rotoscopers.com/wp-content/uploads/2015/06/finding-nemo-promo.jpg',
             trailer: 'https://www.youtube.com/embed/wZdpNglLbt8',
             cast: [
                 { name: 'Albert Brooks', character: 'Marlin (voice)', image: 'https://image.tmdb.org/t/p/w200/r.jpg' },
@@ -702,9 +702,9 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 55m',
             rating: 4.8,
             synopsis: 'Bob Parr has given up his superhero days to log in time as an insurance adjuster and raise his three exuberant children with his formerly heroic wife in suburbia. But when he receives a mysterious assignment, it\'s time to get back into costume.',
-            poster: 'https://image.tmdb.org/t/p/original/2L.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/s.jpg',
-            trailer: 'https://www.youtube.com/embed/eZbzbC9285I',
+            poster: 'https://www.filmonpaper.com/wp-content/uploads/2011/05/TheIncredibles_onesheet_advance_unreleased_USA_RobertMcGinnis-1.jpg',
+            backdrop: 'https://wallpapers.com/images/hd/mr-incredible-pixar-the-incredibles-movie-by1j1ocdvuub7okq.jpg',
+            trailer: 'https://www.youtube.com/watch?v=sJCjKQQOqT0',
             cast: [
                 { name: 'Craig T. Nelson', character: 'Bob Parr / Mr. Incredible (voice)', image: 'https://image.tmdb.org/t/p/w200/c.jpg' },
                 { name: 'Holly Hunter', character: 'Helen Parr / Elastigirl (voice)', image: 'https://image.tmdb.org/t/p/w200/h.jpg' }
@@ -734,8 +734,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 07m',
             rating: 4.8,
             synopsis: 'Two homicide detectives are on a desperate hunt for a serial killer whose crimes are based on the "seven deadly sins" in this dark and haunting film that takes viewers from the tortured remains of one victim to the next.',
-            poster: 'https://image.tmdb.org/t/p/original/69Sns8WoET6CfaYlIkWD720b496.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/cn3bI60PQ9Snb5j4W3fR5kK9rS9.jpg',
+            poster: 'https://cdn.posteritati.com/posters/000/000/020/714/seven-md-web.jpg',
+            backdrop: 'https://static0.colliderimages.com/wordpress/wp-content/uploads/2024/02/se7en-feature.jpg',
             trailer: 'https://www.youtube.com/embed/znmZoVkCjpI',
             cast: [
                 { name: 'Brad Pitt', character: 'Detective David Mills', image: 'https://image.tmdb.org/t/p/w200/cckcYc2v0yh1tc9QjRelptcOBko.jpg' },
@@ -766,8 +766,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '1h 56m',
             rating: 4.8,
             synopsis: 'Marty McFly, a typical American teenager of the Eighties, is accidentally sent back to 1955 in a plutonium-powered DeLorean "time machine" invented by a slightly mad scientist. During his often hysterical, always amazing trip back in time, Marty must make certain his teenage parents-to-be meet and fall in love - so he can get back to the future.',
-            poster: 'https://image.tmdb.org/t/p/original/fNOH9f1aA7XRTzl1sA1N4ovV7g.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/x4N74cycmaoXIBSWIQC7K7h6B.jpg',
+            poster: 'https://imgc.allpostersimages.com/img/posters/trends-international-back-to-the-future-part-ii-one-sheet_u-L-Q1RG0YL0.jpg',
+            backdrop: 'https://i.pinimg.com/736x/7f/97/9d/7f979d05934cdd5769c45cb5d5442b3e.jpg',
             trailer: 'https://www.youtube.com/embed/qvsgGtivCgs',
             cast: [
                 { name: 'Michael J. Fox', character: 'Marty McFly', image: 'https://image.tmdb.org/t/p/w200/2B9mBK5u8jZ8c2yQ7o7qH.jpg' },
@@ -798,8 +798,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 00m',
             rating: 4.7,
             synopsis: 'On a fall night in 2003, Harvard undergrad and computer programming genius Mark Zuckerberg sits down at his computer and heatedly begins working on a new idea. In a fury of blogging and programming, what begins in his dorm room as a small site among friends soon becomes a global social network and a revolution in communication.',
-            poster: 'https://image.tmdb.org/t/p/original/n0yBibhJtQ5icDqTp8eA4HLN7P.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/kYd1Z.jpg',
+            poster: 'https://i.pinimg.com/736x/79/51/05/795105bdfe8bb26e8cf5e1ea088f61d1.jpg',
+            backdrop: 'https://cdn.appleosophy.com/2021/02/a44687ba-wp5959638.jpg',
             trailer: 'https://www.youtube.com/embed/lB95KLmpLR4',
             cast: [
                 { name: 'Jesse Eisenberg', character: 'Mark Zuckerberg', image: 'https://image.tmdb.org/t/p/w200/2.jpg' },
@@ -814,8 +814,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 22m',
             rating: 5.0,
             synopsis: 'Framed in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden.',
-            poster: 'https://image.tmdb.org/t/p/original/lyQBXzOQKo0bUmkR5S3f0qt3N6.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/wPU78OPN4BYEgWYdXG0FlxbXV23.jpg',
+            poster: 'https://mir-s3-cdn-cf.behance.net/project_modules/hd/2fa44b15344917.5628fd261893b.jpg',
+            backdrop: 'https://img.englishcinemazurich.com/Nh0Jt5ORLp7ZKIE9L7GzG1scmjpmZtRuiyVp6D9oPVI/resize:fill:800:450:1:0/gravity:sm/aHR0cHM6Ly9leHBhdGNpbmVtYXByb2QuYmxvYi5jb3JlLndpbmRvd3MubmV0L2ltYWdlcy9jYTk0MDU5NS01MjIwLTQxNDgtOTlhYy0yMTExNWM0ZjkxMDcuanBn.jpg',
             trailer: 'https://www.youtube.com/embed/6hB3S9bIaco',
             cast: [
                 { name: 'Tim Robbins', character: 'Andy Dufresne', image: 'https://image.tmdb.org/t/p/w200/A3oM8F9xQ6iQ94A3v3.jpg' },
@@ -846,8 +846,8 @@ export const useMovieStore = defineStore('movie', () => {
             duration: '2h 08m',
             rating: 4.6,
             synopsis: 'Mia, an aspiring actress, serves lattes to movie stars in between auditions and Sebastian, a jazz musician, scrapes by playing cocktail party gigs in dingy bars, but as success mounts they are faced with decisions that begin to fray the fragile fabric of their love affair.',
-            poster: 'https://image.tmdb.org/t/p/original/uDO8zWDhfWz7xHl9ctTRCdVIw7R.jpg',
-            backdrop: 'https://image.tmdb.org/t/p/original/qJeU7KM4nT2C1WpOrwPcYEOpfPB.jpg',
+            poster: 'https://i.pinimg.com/736x/6f/81/aa/6f81aac23be6bdf5404ac21de81f2ad5.jpg',
+            backdrop: 'https://i.pinimg.com/736x/0e/84/d5/0e84d580eb24bffc3dabc017412d7a4d.jpg',
             trailer: 'https://www.youtube.com/embed/0pdqf4P9MB8',
             cast: [
                 { name: 'Ryan Gosling', character: 'Sebastian Wilder', image: 'https://image.tmdb.org/t/p/w200/4X1w0H6k1e7q3e5r8s.jpg' },
@@ -886,7 +886,7 @@ export const useMovieStore = defineStore('movie', () => {
                 { name: 'Tony Revolori', character: 'Zero', image: 'https://image.tmdb.org/t/p/w200/z.jpg' }
             ]
         },
-        // --- COMING SOON SECTION (IDs 201-205) ---
+        // --- COMING SOON SECTION (Updated with Backdrop & Trailers) ---
         {
             id: 201,
             title: "Deadpool & Wolverine",
@@ -895,9 +895,9 @@ export const useMovieStore = defineStore('movie', () => {
             duration: "2h 10m",
             rating: 0,
             poster: "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
-            backdrop: "",
+            backdrop: "https://image.tmdb.org/t/p/original/yDHYTfA3R0jFYba16jBB1ef8oIt.jpg",
             synopsis: "Wolverine is recovering from his injuries when he crosses paths with the loudmouth, Deadpool.",
-            trailer: "https://www.youtube.com/embed/uJMCNJP2ipI"
+            trailer: "https://www.youtube.com/embed/73_1biulkYk"
         },
         {
             id: 202,
@@ -907,8 +907,7 @@ export const useMovieStore = defineStore('movie', () => {
             duration: "2h 18m",
             rating: 0,
             poster: "https://image.tmdb.org/t/p/w500/aciP8Km0waTLXEYf5ybFK5CSUxl.jpg",
-            backdrop: "",
-            synopsis: "Failed comedian Arthur Fleck meets the love of his life, Harley Quinn, while in Arkham State Hospital.",
+            backdrop: "https://image.tmdb.org/t/p/original/c3rBV1S5j5qG5j8f3a3q3g4.jpg", // Placeholder - check for actual link if broken
             trailer: "https://www.youtube.com/embed/xy8aJw1vYHo"
         },
         {
@@ -918,10 +917,9 @@ export const useMovieStore = defineStore('movie', () => {
             year: "2024",
             duration: "TBA",
             rating: 0,
-            poster: "https://image.tmdb.org/t/p/w500/2cxhvwyEwRlysAmf4oo6zqWy7k2.jpg",
-            backdrop: "",
-            synopsis: "Follows Lucius, the son of Lucilla and nephew of Commodus.",
-            trailer: ""
+            poster: "https://orangemagazine.ph/wp-content/uploads/2024/10/GLADIATOR-II-2.jpg",
+            backdrop: "https://indieentertainmentmedia.com/wp-content/uploads/2024/12/HO00003140.jpg", // Reusing Gladiator 1 as placeholder
+            trailer: "https://www.youtube.com/embed/owK1qxDselE" // Using Gladiator 1 trailer as placeholder
         },
         {
             id: 204,
@@ -930,10 +928,9 @@ export const useMovieStore = defineStore('movie', () => {
             year: "2024",
             duration: "TBA",
             rating: 0,
-            poster: "https://image.tmdb.org/t/p/w500/1lZ2b638l3x9j5l8.jpg",
-            backdrop: "",
-            synopsis: "Simba, having become king of the Pride Lands, is determined for his cub to follow in his paw prints.",
-            trailer: ""
+            poster: "https://cdn.moviefone.com/admin-uploads/highlights/images/mufasa-thelionking-poster_1733573409.jpg",
+            backdrop: "https://www.tucmag.net/wp-content/uploads/2024/12/Mufasa-featured.jpeg", // Reusing Lion King 1
+            trailer: "https://www.youtube.com/embed/4sj1MT05lAA" // Reusing Lion King 1
         },
         {
             id: 205,
@@ -942,10 +939,9 @@ export const useMovieStore = defineStore('movie', () => {
             year: "2024",
             duration: "TBA",
             rating: 0,
-            poster: "https://image.tmdb.org/t/p/w500/aosm8Nmq3UyoBVpSPHwbchI4v5g.jpg",
-            backdrop: "",
-            synopsis: "Eddie and Venom are on the run. Hunted by both of their worlds.",
-            trailer: ""
+            poster: "https://media.themoviedb.org/t/p/w220_and_h330_face/A9UWGDAEUtu6DwAtiJX3XOsHvTG.jpg",
+            backdrop: "https://butwhytho.net/wp-content/uploads/2024/10/Venom-3-The-Last-Dance-But-Why-Tho.jpg", // Placeholder
+            trailer: "https://www.youtube.com/embed/u9Mv98Gr5pY" // Venom 1 Trailer as placeholder
         }
     ]
 

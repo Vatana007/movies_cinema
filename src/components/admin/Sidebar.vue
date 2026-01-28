@@ -3,7 +3,7 @@
         <div class="sidebar-header">
             <div class="brand">
                 <PhFilmStrip :size="32" weight="duotone" color="var(--color-accent)" />
-                <span class="logo-text">ADMIN</span>
+                <span class="logo-text">ADMIN adfafad</span>
             </div>
         </div>
 
@@ -62,7 +62,7 @@ import {
 <style scoped>
 .sidebar {
     width: 260px;
-    height: 100vh;
+    height: calc(100vh - 48px);
     background-color: var(--color-bg-secondary);
     border-right: 1px solid var(--color-bg-highlight);
     display: flex;
@@ -70,6 +70,7 @@ import {
     position: fixed;
     left: 0;
     top: 0;
+    background-color: azure;
 }
 
 .sidebar-header {
