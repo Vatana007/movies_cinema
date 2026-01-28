@@ -1,0 +1,32 @@
+:root {
+    /* 1. Palette: Dark, Cinematic Luxury */
+    --color-bg-primary: #0f1014;
+    /* Very dark gunmetal */
+    --color-bg-secondary: #1b1e26;
+    /* Slightly lighter for cards */
+    --color-bg-highlight: #2c303a;
+    /* For hover states */
+
+    --color-accent: #e50914;
+    /* Netflix/Cinema Red */
+    --color-accent-gold: #ffd700;
+    /* VIP/Rating Gold */
+
+    --color-text-main: #ffffff;
+    --color-text-muted: #a1a1aa;
+
+    /* 2. Spacing & Shape */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+
+    --spacing-container: 1200px;
+    /* Max width for desktop */
+
+    /* 3. Effects (The "Modern" Feel) */
+    --shadow-card: 0 10px 20px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 15px rgba(229, 9, 20, 0.4);
+    /* Red glow */
+    --transition-fast: all 0.2s ease-in-out;
+}

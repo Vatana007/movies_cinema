@@ -1,0 +1,23 @@
+/* base.css */
+body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-main);
+    font-family: 'Inter', sans-serif;
+    /* Import this font in index.html */
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Reusable Container */
+.container {
+    max-width: var(--spacing-container);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Modern Grid System */
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+}
