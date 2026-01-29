@@ -4,159 +4,180 @@ import { useAuthStore } from '@/store/authStore'
 // --- LAYOUTS ---
 import UserLayout from '@/layouts/UserLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
+import AuthLayout from '@/layouts/AuthLayout.vue'
 
-const routes = [
-    // ====================================================
-    // 1. PUBLIC & USER ROUTES (Wrapped in UserLayout)
-    // ====================================================
-    {
-        path: '/',
-        component: UserLayout,
-        children: [
-            {
-                path: '',
-                name: 'Home',
-                component: () => import('@/views/user/HomeView.vue')
-            },
-            {
-                path: 'movies',
-                name: 'Movies',
-                component: () => import('@/views/user/MoviesView.vue')
-            },
-            {
-                path: 'cinemas',
-                name: 'Cinemas',
-                component: () => import('@/views/user/CinemasView.vue')
-            },
-            {
-                path: 'offers',
-                name: 'Offers',
-                component: () => import('@/views/user/OffersView.vue')
-            },
-            {
-                path: 'movie/:id',
-                name: 'MovieDetail',
-                component: () => import('@/views/user/MovieDetailView.vue')
-            },
-            // --- Protected User Routes ---
-            {
-                path: 'booking/:id',
-                name: 'Booking',
-                meta: { requiresAuth: true },
-                component: () => import('@/views/user/BookingView.vue')
-            },
-            {
-                path: 'profile',
-                name: 'Profile',
-                meta: { requiresAuth: true },
-                component: () => import('@/views/user/ProfileView.vue')
-            }
-        ]
-    },
-
-    // ====================================================
-    // 2. AUTH ROUTES (Login / Signup)
-    // ====================================================
-    {
-        path: '/login',
-        name: 'Login',
-        meta: { guestOnly: true },
-        component: () => import('@/components/auth/LoginModal.vue')
-    },
-    {
-        path: '/signup',
-        name: 'Signup',
-        meta: { guestOnly: true },
-        component: () => import('@/components/auth/SignupForm.vue')
-    },
-
-    // ====================================================
-    // 3. ADMIN PANEL ROUTES (Wrapped in AdminLayout)
-    // ====================================================
-    {
-        path: '/admin',
-        component: AdminLayout,
-        meta: { requiresAuth: true, adminOnly: true }, // Strict Admin Protection
-        children: [
-            {
-                path: '',
-                redirect: { name: 'AdminDashboard' }
-            },
-            {
-                path: 'dashboard',
-                name: 'AdminDashboard',
-                component: () => import('@/views/admin/DashboardView.vue')
-            },
-            {
-                path: 'movies',
-                name: 'AdminMovies',
-                component: () => import('@/views/admin/MoviesManagerView.vue')
-            },
-            {
-                path: 'bookings',
-                name: 'AdminBookings',
-                component: () => import('@/views/admin/BookingManagerView.vue')
-            },
-            {
-                path: 'users',
-                name: 'AdminUsers',
-                component: () => import('@/views/admin/UserManagerView.vue')
-            },
-            // FIX: Added the missing Promo route here
-            {
-                path: 'promos',
-                name: 'AdminPromos',
-                component: () => import('@/views/admin/PromoManagerView.vue')
-            }
-        ]
-    },
-
-    // ====================================================
-    // 4. FALLBACK (404)
-    // ====================================================
-    {
-        path: '/:pathMatch(.*)*',
-        redirect: '/'
-    }
-]
+// --- AUTH COMPONENTS (Direct Import) ---
+import LoginForm from '@/components/auth/LoginForm.vue'
+import RegisterForm from '@/components/auth/SignupForm.vue'
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
-    routes,
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+        // ====================================================
+        // 1. AUTH ROUTES (Wrapped in AuthLayout)
+        // ====================================================
+        {
+            path: '/login',
+            component: AuthLayout,
+            children: [
+                {
+                    path: '',
+                    name: 'Login',
+                    component: LoginForm,
+                    meta: { guestOnly: true }
+                }
+            ]
+        },
+        {
+            path: '/register',
+            component: AuthLayout,
+            children: [
+                {
+                    path: '',
+                    name: 'Register',
+                    component: RegisterForm,
+                    meta: { guestOnly: true }
+                }
+            ]
+        },
+
+        // ====================================================
+        // 2. USER ROUTES (Wrapped in UserLayout)
+        // ====================================================
+        {
+            path: '/',
+            component: UserLayout,
+            children: [
+                {
+                    path: '',
+                    name: 'home',
+                    component: () => import('@/views/user/HomeView.vue')
+                },
+                {
+                    path: 'movies',
+                    name: 'movies',
+                    component: () => import('@/views/user/MoviesView.vue')
+                },
+                {
+                    path: 'movie/:id',
+                    name: 'movie-detail',
+                    component: () => import('@/views/user/MovieDetailView.vue')
+                },
+                {
+                    path: 'cinemas',
+                    name: 'cinemas',
+                    component: () => import('@/views/user/CinemasView.vue')
+                },
+                {
+                    path: 'offers',
+                    name: 'offers',
+                    component: () => import('@/views/user/OffersView.vue')
+                },
+                // --- Protected User Routes ---
+                {
+                    path: 'booking/:id',
+                    name: 'booking',
+                    component: () => import('@/views/user/BookingView.vue'),
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: 'profile',
+                    name: 'profile',
+                    component: () => import('@/views/user/ProfileView.vue'),
+                    meta: { requiresAuth: true }
+                }
+            ]
+        },
+
+        // ====================================================
+        // 3. ADMIN ROUTES (Wrapped in AdminLayout)
+        // ====================================================
+        {
+            path: '/admin',
+            component: AdminLayout,
+            meta: { requiresAuth: true, adminOnly: true },
+            children: [
+                {
+                    path: 'dashboard', // /admin
+                    name: 'admin-dashboard',
+                    component: () => import('@/views/admin/DashboardView.vue')
+                },
+                {
+                    path: 'movies',
+                    name: 'admin-movies',
+                    component: () => import('@/views/admin/MoviesManagerView.vue')
+                },
+                {
+                    path: 'bookings',
+                    name: 'admin-bookings',
+                    component: () => import('@/views/admin/BookingManagerView.vue')
+                },
+                {
+                    path: 'users',
+                    name: 'admin-users',
+                    component: () => import('@/views/admin/UserManagerView.vue')
+                },
+                {
+                    path: 'promos',
+                    name: 'admin-promos',
+                    component: () => import('@/views/admin/PromoManagerView.vue')
+                },
+                {
+                    path: 'screens',
+                    name: 'admin-screens',
+                    component: () => import('@/views/admin/ScreenManagerView.vue')
+                },
+                {
+                    path: 'shows',
+                    name: 'admin-shows',
+                    component: () => import('@/views/admin/ShowManagerView.vue')
+                },
+                {
+                    path: 'scan',
+                    name: 'admin-scan',
+                    component: () => import('@/views/admin/ScannerView.vue')
+                }
+            ]
+        },
+
+        // ====================================================
+        // 4. FALLBACK (404)
+        // ====================================================
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: () => import('@/views/NotFoundView.vue')
+        }
+    ],
     scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) return savedPosition
         return { top: 0 }
     }
 })
 
 // ====================================================
-// NAVIGATION GUARDS
+// NAVIGATION GUARDS (Security Logic)
 // ====================================================
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
     const authStore = useAuthStore()
-
-    // 1. Initialize Auth if needed (optional based on your store setup)
-    if (!authStore.user) {
-        // authStore.initAuth() // Uncomment if you have persistence initialization
-    }
-
     const isLoggedIn = !!authStore.user
     const isAdmin = authStore.user?.role === 'admin'
 
-    // 2. Check for Protected Routes
-    if (to.meta.requiresAuth && !isLoggedIn) {
-        // authStore.showToast('Please sign in', 'error')
-        return next({ name: 'Login' })
-    }
-
-    // 3. Check for Admin Only Routes
-    if (to.meta.adminOnly && !isAdmin) {
-        // authStore.showToast('Access Denied', 'error')
-        return next({ name: 'Home' })
-    }
-
-    // 4. Check for Guest Only Routes
+    // 1. Prevent Logged-in users from visiting Login/Register
     if (to.meta.guestOnly && isLoggedIn) {
-        return next({ name: 'Home' })
+        if (isAdmin) return next('/admin')
+        return next('/')
+    }
+
+    // 2. Protect Routes that require Login
+    if (to.meta.requiresAuth && !isLoggedIn) {
+        // Optional: Show a toast message here if you want
+        return next('/login')
+    }
+
+    // 3. Protect Admin Routes from regular users
+    if (to.meta.adminOnly && !isAdmin) {
+        return next('/')
     }
 
     next()

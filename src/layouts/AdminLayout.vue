@@ -93,8 +93,8 @@ const handleLogout = () => { authStore.logout(); router.push('/login') }
     border-right: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     flex-direction: column;
+    height: 95vh;
     padding: 24px;
-    height: 100vh;
     position: sticky;
     top: 0;
     transition: transform 0.3s ease;

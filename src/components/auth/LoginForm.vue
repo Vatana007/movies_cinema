@@ -1,53 +1,57 @@
 <template>
     <div class="auth-form-container fade-in">
         <div class="form-header">
-            <h2>Create Account</h2>
-            <p>Join CineMax for exclusive rewards.</p>
+            <h2>Welcome Back</h2>
+            <p>Enter your credentials to access your account.</p>
         </div>
 
-        <form @submit.prevent="handleRegister">
-            <div class="input-group" :class="{ focused: activeField === 'name' }">
-                <label>Full Name</label>
-                <div class="input-wrapper">
-                    <PhUser :size="20" class="field-icon" />
-                    <input v-model="name" type="text" placeholder="John Doe" required @focus="activeField = 'name'"
-                        @blur="activeField = null" />
-                </div>
-            </div>
-
+        <form @submit.prevent="handleLogin">
             <div class="input-group" :class="{ focused: activeField === 'email' }">
                 <label>Email Address</label>
                 <div class="input-wrapper">
                     <PhEnvelopeSimple :size="20" class="field-icon" />
-                    <input v-model="email" type="email" placeholder="user@example.com" required
+                    <input v-model="email" type="email" placeholder="user@cinema.com" required
                         @focus="activeField = 'email'" @blur="activeField = null" />
                 </div>
             </div>
 
             <div class="input-group" :class="{ focused: activeField === 'password' }">
-                <label>Password</label>
+                <div class="label-row">
+                    <label>Password</label>
+                    <a href="#" class="forgot-link">Forgot?</a>
+                </div>
                 <div class="input-wrapper">
                     <PhLockKey :size="20" class="field-icon" />
-                    <input v-model="password" type="password" placeholder="Create a strong password" required
+                    <input v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="••••••••" required
                         @focus="activeField = 'password'" @blur="activeField = null" />
+                    <button type="button" class="toggle-pass" @click="showPassword = !showPassword">
+                        <component :is="showPassword ? PhEyeSlash : PhEye" :size="18" />
+                    </button>
                 </div>
             </div>
 
             <button type="submit" class="btn-primary" :disabled="authStore.loading">
-                <span v-if="!authStore.loading">Get Started</span>
+                <span v-if="!authStore.loading">Sign In</span>
                 <div v-else class="spinner"></div>
             </button>
         </form>
 
-        <p class="terms-text">
-            By signing up, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
-        </p>
+        <div class="divider">
+            <span>Or continue with</span>
+        </div>
 
-        <div class="divider"></div>
+        <div class="social-row">
+            <button class="btn-social">
+                <PhGoogleLogo :size="20" weight="bold" /> Google
+            </button>
+            <button class="btn-social">
+                <PhFacebookLogo :size="20" weight="bold" /> Facebook
+            </button>
+        </div>
 
         <p class="switch-auth">
-            Already have an account?
-            <router-link to="/login" class="link-accent">Sign In</router-link>
+            Don't have an account?
+            <router-link to="/register" class="link-accent">Sign up</router-link>
         </p>
     </div>
 </template>
@@ -56,36 +60,42 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/authStore'
-import { PhUser, PhEnvelopeSimple, PhLockKey } from '@phosphor-icons/vue'
+import {
+    PhEnvelopeSimple, PhLockKey, PhEye, PhEyeSlash,
+    PhGoogleLogo, PhFacebookLogo
+} from '@phosphor-icons/vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
-const name = ref('')
 const email = ref('')
 const password = ref('')
+const showPassword = ref(false)
 const activeField = ref(null)
 
-const handleRegister = async () => {
+const handleLogin = async () => {
     try {
-        await authStore.signup({
-            name: name.value,
-            email: email.value,
-            password: password.value
-        })
-        router.push('/') // Redirect to home on success
+        await authStore.login({ email: email.value, password: password.value })
+        // Redirect based on role
+        if (authStore.user?.role === 'admin') {
+            router.push('/admin')
+        } else {
+            router.push('/')
+        }
     } catch (e) {
-        console.error("Signup failed", e)
+        // Errors are handled by authStore.showToast
+        console.error("Login failed", e)
     }
 }
 </script>
 
 <style scoped>
-/* Reuse styles for consistency */
+/* --- Container --- */
 .auth-form-container {
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
+    /* Glass Effect */
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -94,6 +104,7 @@ const handleRegister = async () => {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
+/* --- Headers --- */
 .form-header {
     text-align: center;
     margin-bottom: 24px;
@@ -112,8 +123,15 @@ const handleRegister = async () => {
     font-size: 0.9rem;
 }
 
+/* --- Inputs --- */
 .input-group {
     margin-bottom: 20px;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
 
 label {
@@ -136,6 +154,7 @@ label {
 
 .input-group.focused .input-wrapper {
     border-color: #e11d48;
+    /* Accent Color */
     background: rgba(0, 0, 0, 0.4);
     box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.1);
 }
@@ -161,6 +180,22 @@ input {
     font-size: 0.95rem;
 }
 
+.toggle-pass {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-pass:hover {
+    color: white;
+}
+
+/* --- Buttons --- */
 .btn-primary {
     width: 100%;
     padding: 14px;
@@ -185,27 +220,60 @@ input {
     cursor: not-allowed;
 }
 
-.terms-text {
-    font-size: 0.75rem;
-    color: #666;
-    text-align: center;
-    margin-top: 16px;
+/* --- Divider & Social --- */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 24px 0;
+    color: #555;
+    font-size: 0.8rem;
 }
 
-.terms-text a {
-    color: #888;
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.social-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.9rem;
+}
+
+.btn-social:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+}
+
+/* --- Links --- */
+.forgot-link {
+    color: #e11d48;
+    font-size: 0.85rem;
     text-decoration: none;
 }
 
-.terms-text a:hover {
+.forgot-link:hover {
     text-decoration: underline;
-    color: #ccc;
-}
-
-.divider {
-    margin: 24px 0;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
 }
 
 .switch-auth {
@@ -226,6 +294,7 @@ input {
     color: #e11d48;
 }
 
+/* --- Animation --- */
 .fade-in {
     animation: fadeIn 0.5s ease;
 }

@@ -15,6 +15,12 @@
                 </div>
 
                 <div class="nav-actions desktop-only">
+
+                    <router-link v-if="isAdmin" to="/admin/dashboard" class="btn-admin-panel">
+                        <PhSquaresFour :size="18" weight="fill" />
+                        <span>Admin Panel</span>
+                    </router-link>
+
                     <router-link to="/profile" class="btn-icon">
                         <PhUser :size="20" />
                     </router-link>
@@ -27,11 +33,18 @@
 
             <transition name="slide-down">
                 <div v-if="mobileMenuOpen" class="mobile-menu">
+                    <router-link v-if="isAdmin" to="/admin/dashboard" class="mobile-admin-link"
+                        @click="mobileMenuOpen = false">
+                        <PhSquaresFour :size="18" /> Go to Admin Dashboard
+                    </router-link>
+
                     <router-link to="/" @click="mobileMenuOpen = false">Home</router-link>
                     <router-link to="/movies" @click="mobileMenuOpen = false">Movies</router-link>
                     <router-link to="/cinemas" @click="mobileMenuOpen = false">Cinemas</router-link>
                     <router-link to="/offers" @click="mobileMenuOpen = false">Offers</router-link>
+
                     <div class="divider"></div>
+
                     <router-link to="/profile" @click="mobileMenuOpen = false" class="profile-link">
                         <PhUser :size="18" /> My Profile
                     </router-link>
@@ -48,16 +61,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { PhFilmStrip, PhUser, PhList, PhX } from '@phosphor-icons/vue'
-
-// 1. IMPORT YOUR FOOTER COMPONENT
-// Make sure the path matches where you saved Footer.vue
-// Usually it is in @/components/user/Footer.vue or @/components/Footer.vue
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useAuthStore } from '@/store/authStore' // Import Auth Store
 import Footer from '@/components/common/Footer.vue'
+import {
+    PhFilmStrip, PhUser, PhList, PhX, PhSquaresFour
+} from '@phosphor-icons/vue'
 
+const authStore = useAuthStore()
 const isScrolled = ref(false)
 const mobileMenuOpen = ref(false)
+
+// Check if user is admin
+const isAdmin = computed(() => {
+    return authStore.user && authStore.user.role === 'admin'
+})
 
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 50
@@ -74,7 +92,10 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
     color: white;
     display: flex;
     flex-direction: column;
-    /* This ensures footer stays at bottom */
+}
+
+main {
+    flex: 1;
 }
 
 /* Navbar */
@@ -135,6 +156,50 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* --- 🌟 MODERN ADMIN BUTTON --- */
+.btn-admin-panel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    /* Blue Gradient */
+    color: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-admin-panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+    filter: brightness(1.1);
+}
+
+/* Mobile Admin Link */
+.mobile-admin-link {
+    color: #60a5fa !important;
+    /* Light Blue text */
+    font-weight: 700 !important;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: 8px;
+    padding: 10px 12px !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Mobile Menu */
 .menu-toggle {
     background: none;
     border: none;
@@ -142,15 +207,13 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
     cursor: pointer;
 }
 
-/* Mobile Menu */
 .mobile-menu {
     background: #12141a;
     padding: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
     gap: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .mobile-menu a {
@@ -181,7 +244,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
     display: none;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .desktop-only {
         display: none;
@@ -205,10 +267,5 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 .slide-down-leave-to {
     opacity: 0;
     transform: translateY(-10px);
-}
-
-/* Main Content grows to push footer down */
-main {
-    flex: 1;
 }
 </style>

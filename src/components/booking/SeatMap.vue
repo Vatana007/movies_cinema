@@ -49,8 +49,8 @@ const selectedSeats = ref([])
 
 // Mock Data for Rows
 const rows = ref([
-    { label: 'A', seats: generateSeats('A', 8, 'standard') },
-    { label: 'B', seats: generateSeats('B', 8, 'standard') },
+    { label: 'A', seats: generateSeats('A', 10, 'standard') },
+    { label: 'B', seats: generateSeats('B', 10, 'standard') },
     { label: 'C', seats: generateSeats('C', 10, 'standard') }, // Wider row
     { label: 'D', seats: generateSeats('D', 10, 'vip') },      // VIP Row
 ])

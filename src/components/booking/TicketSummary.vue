@@ -1,269 +1,394 @@
 <template>
-    <div class="ticket-summary">
-        <h3>Booking Summary</h3>
-
-        <div class="summary-row">
-            <span class="label">Movie</span>
-            <span class="value highlight">{{ movieTitle }}</span>
-        </div>
-
-        <div class="summary-row">
-            <span class="label">Seats ({{ selectedSeats.length }})</span>
-            <span class="value seats-list">{{ selectedSeats.join(', ') || '-' }}</span>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="summary-row">
-            <span class="label">Tickets</span>
-            <span class="value">${{ subtotal.toFixed(2) }}</span>
-        </div>
-
-        <div class="summary-row">
-            <span class="label">Booking Fee</span>
-            <span class="value">${{ bookingFee.toFixed(2) }}</span>
-        </div>
-
-        <div v-if="discountAmount > 0" class="summary-row discount">
-            <span class="label">Discount ({{ appliedCode }})</span>
-            <span class="value">-${{ discountAmount.toFixed(2) }}</span>
+    <div class="summary-card fade-in">
+        <div class="card-header">
+            <div class="poster-thumb">
+                <PhFilmStrip :size="24" weight="duotone" />
+            </div>
+            <div class="header-text">
+                <h3>{{ movieTitle }}</h3>
+                <p class="cinema-name">
+                    <PhMapPin :size="14" weight="fill" /> {{ cinemaName }}
+                </p>
+            </div>
         </div>
 
         <div class="divider"></div>
 
-        <div class="total-row">
-            <span>Total</span>
-            <span class="total-amount">${{ grandTotal.toFixed(2) }}</span>
+        <div class="details-grid">
+            <div class="detail-item">
+                <span class="label">Date</span>
+                <span class="value">{{ date }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Time</span>
+                <span class="value">{{ time }}</span>
+            </div>
+            <div class="detail-item full-width">
+                <span class="label">Selected Seats <span class="count">({{ selectedSeats.length }})</span></span>
+                <div class="seats-pill-list">
+                    <span v-if="selectedSeats.length === 0" class="placeholder">-</span>
+                    <span v-for="seat in selectedSeats" :key="seat" class="seat-badge">{{ seat }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Extras</div>
+        <div class="extras-container">
+            <div class="extra-row">
+                <div class="extra-info">
+                    <span class="extra-name">Large Popcorn</span>
+                    <span class="extra-price">$8.00</span>
+                </div>
+                <div class="stepper">
+                    <button @click="updatePopcorn(-1)" :disabled="popcornQty === 0">
+                        <PhMinus :size="14" />
+                    </button>
+                    <span class="qty">{{ popcornQty }}</span>
+                    <button @click="updatePopcorn(1)">
+                        <PhPlus :size="14" />
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="promo-section">
-            <div class="input-group" :class="{ disabled: discountAmount > 0 }">
-                <div class="icon-wrapper">
+            <div class="input-group" :class="{ 'success': promoApplied }">
+                <div class="icon-box">
                     <PhTag :size="18" />
                 </div>
-                <input v-model="promoInput" type="text" placeholder="Promo Code" @keyup.enter="applyPromo"
-                    :disabled="discountAmount > 0" />
-
-                <button v-if="!discountAmount" @click="applyPromo" class="btn-apply" :disabled="!promoInput">
+                <input v-model="promoCode" type="text" placeholder="Promo Code" :disabled="promoApplied"
+                    @keyup.enter="applyPromo" />
+                <button v-if="!promoApplied" class="btn-apply" @click="applyPromo" :disabled="!promoCode">
                     Apply
                 </button>
-                <button v-else @click="removePromo" class="btn-remove">
-                    <PhX :size="16" weight="bold" />
+                <button v-else class="btn-remove" @click="removePromo">
+                    <PhX :size="14" />
                 </button>
             </div>
-
-            <transition name="fade">
-                <p v-if="message" :class="['promo-msg', messageType]">
-                    <component :is="messageType === 'success' ? PhCheckCircle : PhWarningCircle" :size="16"
-                        weight="fill" />
-                    {{ message }}
-                </p>
-            </transition>
+            <p v-if="promoMessage" class="promo-feedback" :class="promoStatus">{{ promoMessage }}</p>
         </div>
 
-        <button class="btn-checkout" :disabled="selectedSeats.length === 0" @click="handleCheckout">
-            Confirm Payment
-        </button>
+        <div class="divider"></div>
+
+        <div class="price-breakdown">
+            <div class="price-row">
+                <span>Tickets ({{ selectedSeats.length }})</span>
+                <span>${{ (selectedSeats.length * ticketPrice).toFixed(2) }}</span>
+            </div>
+            <div class="price-row">
+                <span>Booking Fee</span>
+                <span>$1.50</span>
+            </div>
+            <div class="price-row" v-if="popcornQty > 0">
+                <span>Add-ons</span>
+                <span>${{ (popcornQty * 8).toFixed(2) }}</span>
+            </div>
+            <div class="price-row discount" v-if="discountValue > 0">
+                <span>Discount</span>
+                <span>-${{ discountValue.toFixed(2) }}</span>
+            </div>
+        </div>
+
+        <div class="total-section">
+            <div class="total-row">
+                <span>Total Amount</span>
+                <span class="final-price">${{ calculateTotal.toFixed(2) }}</span>
+            </div>
+
+            <button class="btn-proceed" :disabled="selectedSeats.length === 0" @click="$emit('proceed')">
+                <span>Confirm Booking</span>
+                <PhArrowRight :size="18" weight="bold" />
+            </button>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { usePromoStore } from '@/store/promoStore'
 import {
-    PhTag, PhCheckCircle, PhWarningCircle, PhX
+    PhFilmStrip, PhMapPin, PhTag, PhMinus, PhPlus, PhX, PhArrowRight
 } from '@phosphor-icons/vue'
 
-const props = defineProps({
-    selectedSeats: {
-        type: Array,
-        default: () => []
-    },
-    ticketPrice: {
-        type: Number,
-        default: 12
-    },
-    movieTitle: {
-        type: String,
-        default: 'Unknown Movie'
-    }
-})
+const props = defineProps(['movieTitle', 'cinemaName', 'date', 'time', 'selectedSeats', 'ticketPrice', 'userPoints'])
+const emit = defineEmits(['update:discount', 'update:extras', 'proceed'])
 
-const emit = defineEmits(['proceed'])
 const promoStore = usePromoStore()
 
 // State
-const promoInput = ref('')
-const appliedCode = ref('')
-const discountAmount = ref(0)
-const message = ref('')
-const messageType = ref('') // 'success' | 'error'
+const popcornQty = ref(0)
+const promoCode = ref('')
+const promoApplied = ref(false)
+const appliedPromoData = ref(null)
+const promoMessage = ref('')
+const promoStatus = ref('')
 
-// Constants
-const bookingFee = 1.50
-
-// Computed Values
-const subtotal = computed(() => props.selectedSeats.length * props.ticketPrice)
-
-const grandTotal = computed(() => {
-    const total = subtotal.value + bookingFee - discountAmount.value
-    return Math.max(total, 0) // Ensure total never drops below zero
+// Computed
+const discountValue = computed(() => {
+    if (!appliedPromoData.value) return 0
+    const subtotal = (props.selectedSeats.length * props.ticketPrice)
+    return (subtotal * appliedPromoData.value.discount) / 100
 })
 
-// Methods
+const calculateTotal = computed(() => {
+    const subtotal = (props.selectedSeats.length * props.ticketPrice) + 1.50 + (popcornQty.value * 8)
+    return Math.max(0, subtotal - discountValue.value)
+})
+
+// Actions
+const updatePopcorn = (delta) => {
+    if (popcornQty.value + delta >= 0) {
+        popcornQty.value += delta
+        emit('update:extras', { popcornQty: popcornQty.value, popcornPrice: popcornQty.value * 8 })
+    }
+}
+
 const applyPromo = () => {
-    // 1. Reset previous states
-    message.value = ''
-    messageType.value = ''
-
-    const code = promoInput.value.trim().toUpperCase()
-
-    if (!code) return
-
-    // 2. Validate against Promo Store
-    const promo = promoStore.getPromo(code)
+    if (!promoCode.value) return
+    const promo = promoStore.promos.find(p => p.code === promoCode.value && p.status === 'Active')
 
     if (promo) {
-        // Calculate Percentage Discount based on Subtotal
-        const discountVal = subtotal.value * (promo.discount / 100)
-
-        discountAmount.value = discountVal
-        appliedCode.value = promo.code
-        message.value = `${promo.name}: ${promo.discount}% Off Applied!`
-        messageType.value = 'success'
+        promoApplied.value = true
+        appliedPromoData.value = promo
+        promoMessage.value = `Success! ${promo.discount}% discount applied.`
+        promoStatus.value = 'success'
+        emit('update:discount', discountValue.value)
     } else {
-        message.value = "Invalid or expired code"
-        messageType.value = 'error'
-        discountAmount.value = 0
+        promoMessage.value = 'Invalid or expired code'
+        promoStatus.value = 'error'
     }
 }
 
 const removePromo = () => {
-    promoInput.value = ''
-    appliedCode.value = ''
-    discountAmount.value = 0
-    message.value = ''
-    messageType.value = ''
+    promoApplied.value = false
+    promoCode.value = ''
+    appliedPromoData.value = null
+    promoMessage.value = ''
+    discountValue.value = 0
+    emit('update:discount', 0)
 }
 
-const handleCheckout = () => {
-    // Send all final data to parent for processing
-    emit('proceed', {
-        seats: props.selectedSeats,
-        subtotal: subtotal.value,
-        fee: bookingFee,
-        discount: discountAmount.value,
-        total: grandTotal.value,
-        promoCode: appliedCode.value
-    })
-}
+// Recalculate discount if seats change while promo is active
+watch(() => props.selectedSeats.length, () => {
+    if (promoApplied.value) {
+        emit('update:discount', discountValue.value)
+    }
+})
 </script>
 
 <style scoped>
-.ticket-summary {
-    background: #18181b;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+/* Glass Card Container */
+.summary-card {
+    background: rgba(30, 30, 35, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
     padding: 24px;
-    color: #e4e4e7;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    position: sticky;
-    top: 20px;
-}
-
-h3 {
-    margin: 0 0 24px 0;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: white;
-    letter-spacing: -0.5px;
-}
-
-/* Rows */
-.summary-row {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    font-size: 0.95rem;
-    color: #a1a1aa;
-}
-
-.summary-row .value {
+    flex-direction: column;
+    gap: 20px;
     color: white;
-    font-weight: 500;
 }
 
-.summary-row .highlight {
-    color: var(--color-accent);
-    font-weight: 600;
-}
-
-.summary-row .seats-list {
-    max-width: 150px;
-    text-align: right;
-}
-
-.summary-row.discount {
-    color: #10b981;
-}
-
-.summary-row.discount .value {
-    color: #10b981;
-    font-weight: 700;
-}
-
-.divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 16px 0;
-}
-
-/* Total */
-.total-row {
+/* Header */
+.card-header {
     display: flex;
-    justify-content: space-between;
+    gap: 16px;
     align-items: center;
-    margin-bottom: 24px;
+}
+
+.poster-thumb {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-accent), #4f46e5);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+}
+
+.header-text h3 {
+    margin: 0 0 4px 0;
     font-size: 1.1rem;
     font-weight: 700;
 }
 
-.total-amount {
-    font-size: 1.6rem;
+.cinema-name {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    width: 100%;
+}
+
+/* Details Grid */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-item.full-width {
+    grid-column: span 2;
+}
+
+.label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #6b7280;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.count {
     color: var(--color-accent);
-    text-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
+}
+
+.seats-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.seat-badge {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent-gold);
+}
+
+.placeholder {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Extras */
+.section-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #6b7280;
+    font-weight: 600;
+    margin-bottom: -10px;
+}
+
+.extras-container {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.extra-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.extra-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.extra-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.extra-price {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+.stepper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.stepper button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.stepper button:hover:not(:disabled) {
+    background: var(--color-accent);
+}
+
+.stepper button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.qty {
+    font-weight: bold;
+    width: 20px;
+    text-align: center;
 }
 
 /* Promo Section */
-.promo-section {
-    margin-bottom: 24px;
-}
-
 .input-group {
     display: flex;
     align-items: center;
-    background: #09090b;
-    border: 1px solid #27272a;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
     padding: 4px;
-    transition: 0.2s;
+    transition: 0.3s;
 }
 
 .input-group:focus-within {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.1);
+    box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
 }
 
-.input-group.disabled {
-    opacity: 0.8;
-    background: #111;
+.input-group.success {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
 }
 
-.icon-wrapper {
-    padding: 0 12px;
-    color: #666;
+.icon-box {
+    padding: 0 10px;
+    color: #6b7280;
     display: flex;
-    align-items: center;
 }
 
 .input-group input {
@@ -271,125 +396,141 @@ h3 {
     background: transparent;
     border: none;
     color: white;
-    padding: 12px 0;
-    outline: none;
+    padding: 10px 0;
     font-size: 0.9rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    outline: none;
+    min-width: 0;
 }
 
-.input-group input:disabled {
-    color: #888;
-}
-
-.input-group input::placeholder {
-    color: #444;
-    text-transform: none;
-    font-weight: 400;
-}
-
-/* Promo Buttons */
 .btn-apply {
-    background: rgba(255, 255, 255, 0.1);
+    background: white;
+    color: black;
     border: none;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
     font-weight: 600;
-    transition: 0.2s;
-    margin-right: 4px;
-}
-
-.btn-apply:hover:not(:disabled) {
-    background: var(--color-accent);
-}
-
-.btn-apply:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-right: 2px;
 }
 
 .btn-remove {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     color: #ef4444;
-    padding: 8px;
-    border-radius: 6px;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    margin-right: 4px;
-    transition: 0.2s;
+    justify-content: center;
+    margin-right: 2px;
 }
 
-.btn-remove:hover {
-    background: #ef4444;
-    color: white;
+.promo-feedback {
+    font-size: 0.8rem;
+    margin: 8px 0 0 4px;
 }
 
-/* Feedback Messages */
-.promo-msg {
-    margin: 10px 0 0 0;
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-weight: 500;
-}
-
-.promo-msg.success {
-    background: rgba(16, 185, 129, 0.1);
+.promo-feedback.success {
     color: #10b981;
-    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
-.promo-msg.error {
-    background: rgba(239, 68, 68, 0.1);
+.promo-feedback.error {
     color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-/* Main Button */
-.btn-checkout {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--color-accent), #f43f5e);
-    border: none;
-    border-radius: 12px;
+/* Price Breakdown */
+.price-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #d1d5db;
+}
+
+.price-row.discount {
+    color: #10b981;
+}
+
+/* Total & Action */
+.total-section {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 100%);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 10px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.total-row span:first-child {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.final-price {
+    font-size: 1.8rem;
+    font-weight: 800;
     color: white;
+    line-height: 1;
+}
+
+.btn-proceed {
+    width: 100%;
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(225, 29, 72, 0.4);
 }
 
-.btn-checkout:hover:not(:disabled) {
+.btn-proceed:hover:not(:disabled) {
+    background: #be123c;
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(229, 9, 20, 0.5);
-    filter: brightness(1.1);
+    box-shadow: 0 8px 25px rgba(225, 29, 72, 0.5);
 }
 
-.btn-checkout:disabled {
-    background: #333;
-    color: #666;
+.btn-proceed:disabled {
+    background: #374151;
+    color: #6b7280;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-/* Vue Transitions */
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s;
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>

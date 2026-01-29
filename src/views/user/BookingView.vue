@@ -173,6 +173,14 @@ onMounted(() => {
     margin: 0;
 }
 
+.summary-sidebar {
+    flex: 1;
+    position: sticky;
+    top: 90px; /* Adjusted to account for navbar height */
+    height: fit-content;
+    min-width: 340px; /* Prevents it from getting too squished */
+}
+
 .booking-layout {
     display: grid;
     grid-template-columns: 1fr 350px;

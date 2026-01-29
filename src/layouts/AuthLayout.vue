@@ -1,18 +1,27 @@
 <template>
-    <div class="auth-layout minimal-style">
-        <div class="grid-bg"></div>
+    <div class="auth-layout">
+        <div class="aurora-bg">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+        </div>
 
-        <div class="auth-container">
-            <div class="brand-header">
-                <PhFilmStrip :size="32" weight="duotone" color="var(--color-accent)" />
+        <div class="grid-pattern"></div>
+
+        <div class="auth-content">
+            <div class="brand-header" @click="$router.push('/')">
+                <div class="logo-icon">
+                    <PhFilmStrip :size="28" weight="duotone" />
+                </div>
                 <span class="logo-text">CINE<span class="highlight">MAX</span></span>
             </div>
 
-            <slot />
+            <router-view />
 
             <div class="auth-footer">
                 <a href="#">Privacy</a>
+                <span class="dot">•</span>
                 <a href="#">Terms</a>
+                <span class="dot">•</span>
                 <a href="#">Help</a>
             </div>
         </div>
@@ -29,70 +38,115 @@ import { PhFilmStrip } from '@phosphor-icons/vue'
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #09090b;
-    /* Deep black-gray */
-    color: #e4e4e7;
+    background-color: #050510;
     position: relative;
+    overflow: hidden;
     font-family: 'Inter', sans-serif;
 }
 
-/* Grid Pattern Background */
-.grid-bg {
+/* Background Effects */
+.aurora-bg {
     position: absolute;
     inset: 0;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    z-index: 0;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+}
+
+.blob-1 {
+    top: -10%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: #4f46e5;
+}
+
+.blob-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: #e11d48;
+}
+
+.grid-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
     mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
-    pointer-events: none;
+    z-index: 1;
 }
 
-.auth-container {
+.auth-content {
     position: relative;
     z-index: 10;
     width: 100%;
-    max-width: 380px;
-    /* Smaller container width */
+    max-width: 400px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
+/* Brand Header */
 .brand-header {
     display: flex;
     align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    cursor: pointer;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #e11d48, #4f46e5);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-bottom: 24px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
 }
 
 .logo-text {
     font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    font-weight: 800;
     color: white;
+    letter-spacing: -0.5px;
 }
 
 .highlight {
-    color: var(--color-accent);
+    color: #e11d48;
 }
 
+/* Footer */
 .auth-footer {
-    margin-top: 24px;
+    margin-top: 30px;
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    font-size: 0.75rem;
-    color: #71717a;
+    gap: 10px;
+    color: #666;
+    font-size: 0.85rem;
 }
 
 .auth-footer a {
-    color: inherit;
+    color: #888;
     text-decoration: none;
-    transition: color 0.2s;
+    transition: 0.2s;
 }
 
 .auth-footer a:hover {
-    color: var(--color-accent);
+    color: white;
+}
+
+.dot {
+    color: #444;
 }
 </style>
